@@ -4,6 +4,8 @@ const router = express.Router();
 const { auth } = require('../middleware/auth');
 const {
   getPlaces,
+  getPlace,
+  getMyPlaces,
   createPlace,
   updatePlace,
   putComment,
@@ -25,8 +27,11 @@ router
     createPlace,
   );
 
+router.route('/myplaces').get(auth, getMyPlaces);
+
 router
   .route('/:id')
+  .get(auth, getPlace)
   .patch(
     [
       check('description').isLength({ min: 5 }),

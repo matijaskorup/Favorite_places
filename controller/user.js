@@ -51,7 +51,6 @@ exports.authUser = async (req, res, next) => {
   } catch (err) {
     return next(new HttpError('Could not save the user!', 500));
   }
-  console.log(req.user);
   tokenResponse(user, 200, res);
 };
 

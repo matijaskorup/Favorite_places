@@ -5,15 +5,43 @@ const { getCordsForAddress } = require('../utils/getCords');
 
 exports.getPlaces = async (req, res, next) => {
   try {
-    let places = await Place.find({});
+    let places = await Place.find({}).populate('user');
     if (!places) {
-      return next(new HttpError('Could not find a Places!', 404));
+      return next(new HttpError('Could not find a Place!', 404));
     }
     res
       .status(200)
       .json({ places: places.map((el) => el.toObject({ getters: true })) });
   } catch (err) {
     return next(err);
+  }
+};
+
+exports.getMyPlaces = async (req, res, next) => {
+  try {
+    let places = await Place.find({ user: req.user.id });
+    if (!places) {
+      return next(new HttpError('Could not find a place!', 404));
+    }
+    res
+      .status(200)
+      .json({ places: places.map((el) => el.toObject({ getters: true })) });
+  } catch (err) {
+    return next(new HttpError('Error fetching places!', 500));
+  }
+};
+
+exports.getPlace = async (req, res, next) => {
+  let place;
+  try {
+    place = await Place.findById(req.params.id);
+    if (!place) {
+      return next(new HttpError('Place not found!', 404));
+    }
+    res.status(200).json({ place: place.toObject({ getters: true }) });
+  } catch (err) {
+    console.log(err);
+    return next(new HttpError('Find Place Error!', 500));
   }
 };
 

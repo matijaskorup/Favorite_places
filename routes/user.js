@@ -11,7 +11,7 @@ const { auth } = require('../middleware/auth');
 
 router.route('/me').get(auth, getMe);
 router
-  .route('/auth')
+  .route('/register')
   .post(
     [
       check('username').isLength({ min: 5 }),
